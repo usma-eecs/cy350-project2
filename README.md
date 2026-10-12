@@ -50,8 +50,8 @@ _Failure to follow any of the above restrictions will be considered unauthorized
 ### 🏅 Points Breakdown
 
 - Python code quality: 5 points
-- Server interaction: 25 points
-- Report: 20 points
+- Server interaction: 15 points
+- Report: 30 points
 - In-Class Quiz: 20 points
 
 ### 🏆 Achievements - Server interaction

@@ -56,7 +56,6 @@ title SABRE Packet (64-bit Condensed Header)
 - `sender.py`: This is where you will implement the SABRE protocol.
 - `packet.py`: This file contains the `Packet` class that defines the structure of a SABRE packet and provides methods for serialization and deserialization.
 - `simpletimer.py`: This file contains a simple timer class that you can use for implementing timeouts in your Go-Back-N protocol.
-- `corpus.py`: This file downloads the sample text files that you will send to the server as payload. It downloads several e-books from [Project Gutenberg](https://www.gutenberg.org/) to `gutenberg.zip` file and extracts them to the `gutenberg` directory.
 - `pyproject.toml`
 
 ### Key Tasks
@@ -71,7 +70,7 @@ Upon successful connection and data transfer, inspect the final FIN packet sent 
 
 ### Testing
 
-- Run your sender on the WREN. You should see some server responses subject to approximately ~20% packet loss.
+- Run your sender on the WREN. You should see some server responses subject to approximately ~20% packet loss and reordering.
 - Capture packets with `tcpdump` and analyze them with Wireshark.
 
 ```sh
