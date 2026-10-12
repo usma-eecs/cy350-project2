@@ -8,8 +8,8 @@ FLAG_SYN = 0x02
 FLAG_FIN = 0x04
 FLAG_RST = 0x08
 
-class SabrePacket:
 
+class SabrePacket:
     # TYPE_SABRE is the fixed first byte of the header to identify this as a SABRE packet
     TYPE_SABRE = 0xDD
     # Use a single 8-byte unsigned integer (Q) to pack all header fields
@@ -68,12 +68,12 @@ class SabrePacket:
 
         # Shift and mask fields into their specific bit positions
         header_int = (
-            ((SabrePacket.TYPE_SABRE & 0xFF) << 56) |
-            ((self.flags & 0x0F) << 52) |
-            ((self.seq & 0xFFF) << 40) |
-            ((self.ack & 0xFFF) << 28) |
-            ((encoded_length & 0xFFF) << 16) |
-            (int.from_bytes(self.cadet_hash, byteorder="big") & 0xFFFF)
+            ((SabrePacket.TYPE_SABRE & 0xFF) << 56)
+            | ((self.flags & 0x0F) << 52)
+            | ((self.seq & 0xFFF) << 40)
+            | ((self.ack & 0xFFF) << 28)
+            | ((encoded_length & 0xFFF) << 16)
+            | (int.from_bytes(self.cadet_hash, byteorder="big") & 0xFFFF)
         )
 
         header = struct.pack(SabrePacket.HEADER_FORMAT, header_int)
@@ -87,7 +87,7 @@ class SabrePacket:
             raise ValueError("Packet too short to contain SABRE header")
 
         header = data[: SabrePacket.HEADER_SIZE]
-        payload = data[SabrePacket.HEADER_SIZE:]
+        payload = data[SabrePacket.HEADER_SIZE :]
 
         (header_int,) = struct.unpack(SabrePacket.HEADER_FORMAT, header)
 
@@ -124,7 +124,7 @@ class SabrePacket:
         # Mask to unsigned 32-bit to handle negative values safely
         value = value & 0xFFFFFFFF
         # Convert integer to 4-byte big-endian bytes for hashing
-        data = value.to_bytes(4, byteorder='big', signed=False)
+        data = value.to_bytes(4, byteorder="big", signed=False)
         # Return 2-byte Blake2s digest
         return hashlib.blake2s(data, digest_size=2).digest()
 
@@ -137,10 +137,10 @@ class SabrePacket:
         if self.flags & FLAG_FIN or len(self.payload) <= MAX_PAYLOAD_DISPLAY:
             payload_str = self.payload.decode()
         else:
-            payload_str = self.payload[:MAX_PAYLOAD_DISPLAY-3].decode() + "..."
+            payload_str = self.payload[: MAX_PAYLOAD_DISPLAY - 3].decode() + "..."
 
         if payload_str:
-            payload_str = payload_str.replace('\n', ' ')
-            return f"SABRE[flags=0x{self.flags:X} seq={self.seq} ack={self.ack} len={self.length} payload=\"{payload_str}\"]"
+            payload_str = payload_str.replace("\n", " ")
+            return f'SABRE[flags=0x{self.flags:X} seq={self.seq} ack={self.ack} len={self.length} payload="{payload_str}"]'
 
         return f"SABRE[flags=0x{self.flags:X} seq={self.seq} ack={self.ack} len={self.length}]"

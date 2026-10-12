@@ -1,6 +1,5 @@
 import argparse
 import os
-import random
 import signal
 import sys
 import time
@@ -18,7 +17,9 @@ def main():
 
     # argparser reads and processes command line arguments
     argparser = argparse.ArgumentParser(description="SABRE File Sender")
-    argparser.add_argument("--host", help="Server IP address", default="sabre.cy350.space")
+    argparser.add_argument(
+        "--host", help="Server IP address or hostname", default="sabre.cy350.space"
+    )
     argparser.add_argument("--port", type=int, help="Server port", default=5050)
     argparser.add_argument(
         "--filename",
@@ -32,7 +33,10 @@ def main():
         "--timeout", type=float, default=1.0, help="Timeout (seconds)"
     )
     argparser.add_argument(
-        "--cadet-num", type=str, required=True, help="Your cadet number from CIS to include in packets"
+        "--cadet-num",
+        type=str,
+        required=True,
+        help="Your cadet number from CIS to include in packets",
     )
     args = argparser.parse_args()
 
@@ -40,7 +44,9 @@ def main():
         args.filename = "shakespeare-macbeth.txt"
 
     elif args.filename not in corpus_files:
-        print(f"❌ Error: {args.filename} not available. Valid options: {', '.join(corpus_files)}")
+        print(
+            f"❌ Error: {args.filename} not available. Valid options: {', '.join(corpus_files)}"
+        )
         sys.exit(1)
 
     # validate cadet number to include in the packet header; this is used by the server to identify you and notify your instructor when you capture a flag
@@ -53,7 +59,7 @@ def main():
         sys.exit(1)
 
     # read the file to send from the corpus
-    bytes_to_send = nltk.corpus.gutenberg.raw(args.filename).encode('utf-8')
+    bytes_to_send = nltk.corpus.gutenberg.raw(args.filename).encode("utf-8")
 
     print(f"🎖️ Using Cadet Number: {cadet_num}")
     print(f"📄 Sending file: {args.filename} ({bytes_to_send[:50]}...)")
@@ -71,13 +77,12 @@ def main():
     print(f"📦 Estimated packets: {total_packets} (MTU={mtu})")
 
     try:
-
         # initialize the SABRE sender
         client = SABRESender(
             remote=(args.host, args.port),
             cadet_num=int(cadet_num),
             window_size=args.window,
-            timeout=args.timeout
+            timeout=args.timeout,
         )
 
         # perform a 3-way handshake to establish connection with the server
@@ -96,7 +101,9 @@ def main():
         t_close_end = time.monotonic()
 
     except Exception as e:  # noqa: BLE001
-        print("⚠️ An error occurred. Use try/except blocks to find out what went wrong and handle errors gracefully.")
+        print(
+            "⚠️ An error occurred. Use try/except blocks to find out what went wrong and handle errors gracefully."
+        )
         print(f"⚠️ {e}")
         sys.exit(1)
 
@@ -129,7 +136,9 @@ def main():
     print(f"  MTU:           {mtu} bytes")
     print(f"  Window size:   {args.window}")
     print(f"  Timeout:       {args.timeout} s")
-    print(f"  Throughput:    {throughput_Bps:.2f} B/s = {throughput_bps:.2f} b/s = ~{throughput_kbps:.2f} Kbps")
+    print(
+        f"  Throughput:    {throughput_Bps:.2f} B/s = {throughput_bps:.2f} b/s = ~{throughput_kbps:.2f} Kbps"
+    )
     print("=" * 60)
 
 

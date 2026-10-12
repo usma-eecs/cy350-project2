@@ -6,7 +6,7 @@ class SimpleTimer:
 
     def __init__(self, timeout_sec: float):
         self.timeout_sec = timeout_sec
-        self.start_time = None
+        self.start_time: float | None = None
 
     def start(self) -> None:
         """Start or restart the timer."""
